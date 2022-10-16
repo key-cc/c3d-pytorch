@@ -42,9 +42,9 @@ def create_trainh5(number,length,height,width):
 
 
         video = np.asarray(video,dtype=np.float32)   
-        print video.shape
+        print(video.shape)
         label = np.asarray(label,dtype=np.int64)
-        print label.shape
+        print(label.shape)
 
         f = h5py.File('hockey_train.h5','w')
         f['data'] = video                
@@ -75,7 +75,7 @@ def create_testh5(number,height,width):
                                 img = transform(img)
                                 img = img.numpy()
                                 plt.savefig('1.jpg',img)
-                                print num
+                                print(num)
 
         
                                 images[i-1] = img
@@ -86,9 +86,9 @@ def create_testh5(number,height,width):
 
 
         video = np.asarray(video,dtype=np.float32)   
-        print video.shape
+        print(video.shape)
         label = np.asarray(label,dtype=np.int64)
-        print label.shape
+        print(label.shape)
 
         f = h5py.File('hockey_test.h5','w')
         f['data'] = video                
