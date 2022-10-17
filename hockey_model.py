@@ -148,9 +148,10 @@ def train():
     endtime = datetime.datetime.now()
     time = (endtime-starttime).seconds
     print('###############################################################################################################\n')
-    print('Train Epoch: [{}\{}]\ttime: {}s').format(epoch+1,num_epoches,time)
+    print(('Train Epoch: [{}\{}]\ttime: {}s').format(epoch+1,num_epoches,time))
     
-    for param_lr in optimizer.module.param_groups: #同样是要加module
+    #for param_lr in optimizer.module.param_groups: #同样是要加module
+    for param_lr in optimizer.param_groups:
         print('lr_rate: ' + str(param_lr['lr']) + '\n')
 
     print('Train_Loss: {:.6f}      Train_Acc: {:.3f}%\n'.format(train_loss_data / (len(train_dataset)),
