@@ -126,7 +126,8 @@ def train():
         # 回传并更新梯度
         optimizer.zero_grad()
         train_loss.backward()
-        optimizer.module.step()
+        #optimizer.module.step()
+        optimizer.step()
 
         # 输出结果
         print('Train Epoch: {}  [{}/{} ({:.0f}%)]     Batch_Loss: {:.6f}       Batch_Acc: {:.3f}%'.format(
@@ -146,11 +147,11 @@ def train():
 
     endtime = datetime.datetime.now()
     time = (endtime-starttime).seconds
-    print '###############################################################################################################\n'
+    print('###############################################################################################################\n')
     print('Train Epoch: [{}\{}]\ttime: {}s').format(epoch+1,num_epoches,time)
     
     for param_lr in optimizer.module.param_groups: #同样是要加module
-        print 'lr_rate: ' + str(param_lr['lr']) + '\n'
+        print('lr_rate: ' + str(param_lr['lr']) + '\n')
 
     print('Train_Loss: {:.6f}      Train_Acc: {:.3f}%\n'.format(train_loss_data / (len(train_dataset)),
                                                             100. * train_acc / (len(train_dataset))
@@ -236,7 +237,7 @@ train_loader = dataf.DataLoader(train_dataset, batch_size=batch_size, shuffle=Tr
 model = C3D()
 model.apply(weights_init)
 model = model.cuda(device_ids[0])
-model = nn.DataParallel(model, device_ids=device_ids)
+#model = nn.DataParallel(model, device_ids=device_ids)
 summary(model,(3,16,70,110))
 
 # 定义损失和优化函数
@@ -252,7 +253,7 @@ criterion = nn.CrossEntropyLoss()
 #     return loss_batch
 
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=0.001)
-optimizer = nn.DataParallel(optimizer, device_ids=device_ids)
+#optimizer = nn.DataParallel(optimizer, device_ids=device_ids)
 
 # ----------------------------------------------------------------------------------------------
 
