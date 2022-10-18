@@ -1,8 +1,8 @@
 # coding:utf-8
 
-# 读取视频数据和标签,输出一个hdf5
-# 视频数据: N * C * L * H * W
-# 标签: N * 1
+# output hdf5 file
+# video data: N * C * L * H * W
+# label: N * 1
 
 import os
 from PIL import Image
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 def create_trainh5(number,length,height,width):
-        # 读入图片和id
+        # get the frames and ids
 
         video = np.zeros((number, length, 3, height, width), dtype=np.float32)
         label = np.zeros(number, dtype=np.int64)
@@ -26,10 +26,10 @@ def create_trainh5(number,length,height,width):
                         dir_name, frame, lbl = line.split()
                         images = np.zeros((length, 3, height, width), dtype=np.float32)
                         for i in range(int(frame),int(frame)+length):
-                                # 根据路径读取视频矩阵
+                          
                                 img_name = str(i) + '.jpg'
                                 img = Image.open(os.path.join(dir_name,img_name))
-                                # img = img.resize((90,72))
+                          
 
                                 img = transform(img)
                                 img = img.numpy()
@@ -54,7 +54,7 @@ def create_trainh5(number,length,height,width):
 # -------------------------------------------------------------------------------------------------
 
 def create_testh5(number,height,width):
-        # 读入图片和id
+        # get frames and ids
         video = []
         label = []
         video = np.zeros((number, 16, 3, height, width), dtype=np.float32)
@@ -67,7 +67,6 @@ def create_testh5(number,height,width):
                         dir_name, lbl = line.split()
                         images = np.zeros((16, 3, height, width), dtype=np.float32)
                         for i in range(1,17):
-                                # 根据路径读取视频矩阵
                                 img_name = str(i) + '.jpg'
                                 img = Image.open(os.path.join(dir_name,img_name))
                                 # img = img.resize((90,72))
@@ -96,8 +95,7 @@ def create_testh5(number,height,width):
         f.close()
 
 # --------------------------------------------------------------------------------------------------
-
-# 输入数据 数据增强，进行水平、垂直随机移动，水平翻转
+#frame transform
 transform = transforms.Compose([
         transforms.CenterCrop((210,330)),
         transforms.Resize((70,110)),
