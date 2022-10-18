@@ -14,14 +14,15 @@ import matplotlib
 import matplotlib.pyplot as plt
 from PIL import Image
 import torchvision.transforms as transforms
-# import os
+from log import *
+import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 device_ids = [0,1,2,3]
+logger = get_logger('C3D_hockeyFight.log')
 
 def weights_init(m):
     classname = m.__class__.__name__
-    # print(classname)
     if classname.find('Conv3d') != -1:
         init.xavier_normal_(m.weight.data)
         init.constant_(m.bias.data, 0.0)
@@ -103,34 +104,35 @@ def train():
     train_acc = 0.
 
     starttime = datetime.datetime.now()
+    logger.info('start training!')
 
-    # 每次输入barch_idx个数据
+    
     for batch_idx, train_data in enumerate(train_loader):
         
-        # 加载数据
+        # data loading
         train_video, train_label = train_data
         train_video, train_label = train_video.cuda(device_ids[0]), train_label.cuda(device_ids[0])
 
         train_out = model(train_video)
 
-        # 计算损失
+        # calculate the loss
         train_loss = criterion(train_out, train_label)
         # train_loss = L2loss(train_out,train_label,batch_size)
         train_loss_data += train_loss.item()
 
-        # 计算准确率
+        # calculate the accuracy
         train_pred = torch.max(train_out, 1)[1]
         train_correct = (train_pred == train_label).sum()
         train_acc += train_correct.item()
 
-        # 回传并更新梯度
+        # update the grad
         optimizer.zero_grad()
         train_loss.backward()
         #optimizer.module.step()
         optimizer.step()
 
-        # 输出结果
-        print('Train Epoch: {}  [{}/{} ({:.0f}%)]     Batch_Loss: {:.6f}       Batch_Acc: {:.3f}%'.format(
+        # Print log
+        logger.info('Train Epoch: {}  [{}/{} ({:.0f}%)]     Batch_Loss: {:.6f}       Batch_Acc: {:.3f}%'.format(
             epoch + 1, 
             batch_idx * len(train_video), 
             len(train_dataset),
@@ -140,25 +142,25 @@ def train():
             )
         )
 
-        # for param_lr in optimizer.module.param_groups:  # 同样是要加module
+        # for param_lr in optimizer.module.param_groups: 
         #     param_lr['lr'] = param_lr['lr'] * 0.999
 
-        print('-----------------------------------------------------------------------------------------------------------')
+        logger.info('-----------------------------------------------------------------------------------------------------------')
 
     endtime = datetime.datetime.now()
     time = (endtime-starttime).seconds
-    print('###############################################################################################################\n')
-    print(('Train Epoch: [{}\{}]\ttime: {}s').format(epoch+1,num_epoches,time))
+    logger.info('###############################################################################################################\n')
+    logger.info(('Train Epoch: [{}\{}]\ttime: {}s').format(epoch+1,num_epoches,time))
     
-    #for param_lr in optimizer.module.param_groups: #同样是要加module
+    #for param_lr in optimizer.module.param_groups: 
     for param_lr in optimizer.param_groups:
-        print('lr_rate: ' + str(param_lr['lr']) + '\n')
+        logger.info('lr_rate: ' + str(param_lr['lr']) + '\n')
 
-    print('Train_Loss: {:.6f}      Train_Acc: {:.3f}%\n'.format(train_loss_data / (len(train_dataset)),
+    logger.info('Train_Loss: {:.6f}      Train_Acc: {:.3f}%\n'.format(train_loss_data / (len(train_dataset)),
                                                             100. * train_acc / (len(train_dataset))
                                                             )
           )
-    print('-----------------------------------------------------------------------------------------------------------')
+    logger.info('-----------------------------------------------------------------------------------------------------------')
 
 # test
 def test():
@@ -168,35 +170,35 @@ def test():
     test_loss_data = 0.
     test_acc = 0.
 
-    # 每次输入barch_idx个数据
     for test_data in test_loader:
         
-        # 加载数据
+        # data loading
         test_video, test_label = test_data
         test_video, test_label = test_video.cuda(device_ids[0]), test_label.cuda(device_ids[0])
         test_out = model(test_video)
 
-        # 计算损失
+        #calculate the loss
         test_loss = criterion(test_out, test_label)
         test_loss_data += test_loss.item()
 
-        # 计算准确率
+        # calculate the accuracy
         test_pred = torch.max(test_out, 1)[1]
         test_correct = (test_pred == test_label).sum()
         test_acc += test_correct.item()
 
-    print('Test_Loss: {:.6f}      Test_Acc: {:.3f}%\n'.format(test_loss_data / (len(test_dataset)),
+    # Log test performance
+    logger.info('Test_Loss: {:.6f}      Test_Acc: {:.3f}%\n'.format(test_loss_data / (len(test_dataset)),
                                                             100. * test_acc / (len(test_dataset))
                                                             )
           )
-    print('--------------------------------------------------------')
+    logger.info('--------------------------------------------------------')
 
 # ---------------------------------------------------------------------------------------------
 
 
 
 # ----------------------------------------------------------------------------------------------
-# 训练数据集读取
+# training dataset
 f = h5py.File('hockey_train.h5','r')
 train_video = f['data'][()]
 # train_video, train_label = create_train(1000,60,90)
@@ -207,41 +209,41 @@ train_label = f['label'][()]
 train_video = torch.from_numpy(train_video)
 train_label = torch.from_numpy(train_label)
 
-# # 验证数据集读取
-# f1 = h5py.File('hockey_test.h5','r')                           
-# test_video = f1['data'][()]    
-# test_video = test_video.transpose((0,2,1,3,4))     
-# test_label = f1['label'][()] 
+# test dataset
+f1 = h5py.File('hockey_test.h5','r')                           
+test_video = f1['data'][()]    
+test_video = test_video.transpose((0,2,1,3,4))     
+test_label = f1['label'][()] 
 
-# test_video = torch.from_numpy(test_video)
-# test_label = torch.from_numpy(test_label)
+test_video = torch.from_numpy(test_video)
+test_label = torch.from_numpy(test_label)
 
 
 # ---------------------------------------------------------------------------------------------
 
-# 超参数
+# parameters 
 batch_size = 50
 learning_rate = 1e-4
 num_epoches = 200
 
 # ---------------------------------------------------------------------------------------------
 
-# 训练数据集制作
+# training dataset 
 train_dataset = dataf.TensorDataset(train_video, train_label)
 train_loader = dataf.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-# # 验证数据集制作
-# test_dataset = dataf.TensorDataset(test_video, test_label)
-# test_loader = dataf.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+# test dataset
+test_dataset = dataf.TensorDataset(test_video, test_label)
+test_loader = dataf.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-# 模型初始化,并放入GPU
+# initialize the model
 model = C3D()
 model.apply(weights_init)
 model = model.cuda(device_ids[0])
 #model = nn.DataParallel(model, device_ids=device_ids)
 summary(model,(3,16,70,110))
 
-# 定义损失和优化函数
+# loss and optimization 
 criterion = nn.CrossEntropyLoss()
 
 # def L2loss(x,y,batchsize):
@@ -260,4 +262,8 @@ optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight
 
 for epoch in range(num_epoches):
     train()
-    # test()
+    test()
+    # Save model checkpoint
+    if epoch % 5 == 0:
+        os.makedirs("model_checkpoints", exist_ok=True)
+        torch.save(model.state_dict(), f"model_checkpoints/{model.__class__.__name__}_{epoch}.pth")
