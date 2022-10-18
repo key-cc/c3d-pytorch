@@ -73,7 +73,7 @@ def create_testh5(number,height,width):
 
                                 img = transform(img)
                                 img = img.numpy()
-                                plt.savefig('1.jpg',img)
+                                #plt.savefig('1.jpg',img)
                                 print(num)
 
         
@@ -106,4 +106,4 @@ transform = transforms.Compose([
 
 
 create_trainh5(1000,16,70,110)
-#create_testh5(200,60,90)
+create_testh5(200,70,110)
