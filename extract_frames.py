@@ -6,8 +6,8 @@ import os
 import cv2
 
 # 视频路径和图片保存路径
-videos_path = r"/hy-tmp/c3d-pytorch/video"
-images_path = r"/hy-tmp/c3d-pytorch/data"
+videos_path = r"./video"
+images_path = r"./data"
 if not os.path.exists(images_path):
     os.makedirs(images_path)
 
