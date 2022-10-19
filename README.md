@@ -29,4 +29,4 @@ c3d-pytorch
 ```
 ## Setup
 
-Colaboratory file: [I3D+TimeSformer](hmdb51.ipynb) 
+Colaboratory file: [C3D_Hockey](c3d_hockey.ipynb) 
