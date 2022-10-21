@@ -61,9 +61,9 @@ Colaboratory file: [C3D_Hockey](c3d_hockey.ipynb)
 
 ### HockeyFights
 
-| Model | Input size | acc | #params | FLOPs | config | model |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-|  C3D  |     16 x 70 x 110     |  93.50  |   28M   |  87.9G  |  [config](configs/recognition/swin/swin_tiny_patch244_window877_kinetics400_1k.py)  | [github](https://github.com/SwinTransformer/storage/releases/download/v1.0.4/swin_tiny_patch244_window877_kinetics400_1k.pth)/[baidu](https://pan.baidu.com/s/1mIqRzk8RILeRsP2KB5T6fg) |
-|  R21D  |     8 x 112 x 112      |  96.00  |   50M   |  165.9G  |  [config](configs/recognition/swin/swin_small_patch244_window877_kinetics400_1k.py)   | [github](https://github.com/SwinTransformer/storage/releases/download/v1.0.4/swin_small_patch244_window877_kinetics400_1k.pth)/[baidu](https://pan.baidu.com/s/1imq7LFNtSu3VkcRjd04D4Q) |
-|  P3D  |     16 x 160 x 160      |  98.00 |   88M   |  281.6G  |  [config](configs/recognition/swin/swin_base_patch244_window877_kinetics400_1k.py)   | [github](https://github.com/SwinTransformer/storage/releases/download/v1.0.4/swin_base_patch244_window877_kinetics400_1k.pth)/[baidu](https://pan.baidu.com/s/1bD2lxGxqIV7xECr1n2slng) |
-|  ARTNet  |     16x112x112      |  98.00  |   88M   |  281.6G  |  [config](configs/recognition/swin/swin_base_patch244_window877_kinetics400_22k.py)   | [github](https://github.com/SwinTransformer/storage/releases/download/v1.0.4/swin_base_patch244_window877_kinetics400_22k.pth)/[baidu](https://pan.baidu.com/s/1CcCNzJAIud4niNPcREbDbQ) |
+| Model | Input size | acc |
+| :---: | :---: | :---: | 
+|  C3D  |     16 x 70 x 110     |  93.50  | 
+|  R21D  |     8 x 112 x 112      |  96.00  |
+|  P3D  |     16 x 160 x 160      |  98.00 |
+|  ARTNet  |     16x112x112      |  98.00  |
