@@ -37,23 +37,12 @@ The supported datasets are listed in [supported_datasets.md](docs/supported_data
 We also share our Kinetics-400 annotation file [k400_val](https://github.com/SwinTransformer/storage/releases/download/v1.0.6/k400_val.txt), [k400_train](https://github.com/SwinTransformer/storage/releases/download/v1.0.6/k400_train.txt) for better comparison.
 
 ### Inference
-```
-# single-gpu testing
-python tools/test.py <CONFIG_FILE> <CHECKPOINT_FILE> --eval top_k_accuracy
 
-# multi-gpu testing
-bash tools/dist_test.sh <CONFIG_FILE> <CHECKPOINT_FILE> <GPU_NUM> --eval top_k_accuracy
-```
 
 ### Training
 
 To train a video recognition model with pre-trained image models (for Kinetics-400 and Kineticc-600 datasets), run:
-```
-# single-gpu training
-python tools/train.py <CONFIG_FILE> --cfg-options model.backbone.pretrained=<PRETRAIN_MODEL> [model.backbone.use_checkpoint=True] [other optional arguments]
 
-# multi-gpu training
-bash tools/dist_train.sh <CONFIG_FILE> <GPU_NUM> --cfg-options model.backbone.pretrained=<PRETRAIN_MODEL> [model.backbone.use_checkpoint=True] [other optional arguments]
 
 Colaboratory file: [C3D_Hockey](c3d_hockey.ipynb) 
 
